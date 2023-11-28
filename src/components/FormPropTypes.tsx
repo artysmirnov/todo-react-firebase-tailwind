@@ -1,7 +1,7 @@
 import {FormEventHandler} from "react";
 
 export interface FormPropTypes {
-    createTodo: FormEventHandler<HTMLInputElement>;
+    createTodo: FormEventHandler<HTMLFormElement>;
     input: string;
     setInput: (input: string) => void;
 }

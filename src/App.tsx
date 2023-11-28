@@ -45,7 +45,7 @@ const App = () => {
     };
     const [input, setInput] = useState('')
 
-    const createTodo: FormEventHandler<HTMLInputElement> = async (e: FormEvent<HTMLInputElement>) => {
+    const createTodo: FormEventHandler<HTMLFormElement> = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (input === "") {
             return;
