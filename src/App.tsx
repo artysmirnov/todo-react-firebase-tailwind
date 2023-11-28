@@ -1,5 +1,5 @@
 import Form from "./components/Form";
-import {FormEvent, FormEventHandler} from "react";
+import {FormEvent, FormEventHandler, useMemo} from "react";
 import {useState, useEffect} from "react";
 import ToDo from "./components/ToDo";
 import {db} from "./components/Firebase";
@@ -21,6 +21,7 @@ interface TodoType {
 
 const App = () => {
     const [todo, setTodo] = useState<TodoType[]>([]);
+    const [input, setInput] = useState('')
 
     useEffect(() => {
         const q = query(collection(db, "todos"));
@@ -39,23 +40,26 @@ const App = () => {
             completed: !todo.completed
         })
     }
-
     const deleteToDo = async (id: string) => {
         await deleteDoc(doc(db, "todos", id));
     };
-    const [input, setInput] = useState('')
 
     const createTodo: FormEventHandler<HTMLFormElement> = async (e: FormEvent<HTMLFormElement>) => {
+        const message = input;
+        setInput("")
         e.preventDefault();
-        if (input === "") {
+        if (message === "") {
             return;
         }
         await addDoc(collection(db, "todos"), {
             text: input,
             completed: false,
         });
-        setInput("");
     };
+
+    const memoizedCreateTodo = useMemo(() => createTodo, [createTodo]);
+    const memoizedToggleComplete = useMemo(() => toggleComplete, [toggleComplete]);
+    const memorizedDeleteToDo = useMemo(() => deleteToDo, [deleteToDo]);
 
     return (
         <div className="h-screen w-screen p-5 bg-blue-600 overflow-y-scroll">
@@ -66,18 +70,19 @@ const App = () => {
                 <h1 className="text-3xl font-bold text-center text-black p-2">
                     TODO LIST
                 </h1>
-                <Form createTodo={createTodo} input={input} setInput={setInput}/>
+                <Form createTodo={memoizedCreateTodo} input={input} setInput={setInput}/>
                 <ul>
-                    {todo.map((todos, index) => (
+                    {todo.map((todos) => (
                         <ToDo
-                            key={index}
+                            key={todos.id}
                             todos={todos}
-                            toggleComplete={toggleComplete}
-                            deleteTodo={deleteToDo}
+                            toggleComplete={memoizedToggleComplete}
+                            deleteTodo={memorizedDeleteToDo}
                         />
                     ))}
                 </ul>
-                {todo.length > 0 ? <p className="text-center text-black text-2xl">{`You have ${todo.length} tasks`}</p> :
+                {todo.length > 0 ?
+                    <p className="text-center text-black text-2xl">{`You have ${todo.length} tasks`}</p> :
                     <p className='text-center text-2xl text-black '>You have no tasks</p>}
             </div>
         </div>

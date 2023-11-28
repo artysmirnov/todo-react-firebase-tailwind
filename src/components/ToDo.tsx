@@ -11,7 +11,7 @@ interface TodoProps {
 const Todo = ({ todos, toggleComplete, deleteTodo }: TodoProps) => {
     return (
         <li className="p-2 bg-blue-300
-         my-2 rounded-md uppercase shadow-sm">
+         my-2 rounded-md shadow-sm">
             <div className="flex items-center justify-between">
                 <p
                     className={
