@@ -1,2 +1,2 @@
 # todo-tailwind-firebase
-App created with React + TS + Firebase + TailWind\
+App created with React + TS + Firebase + TailWind
